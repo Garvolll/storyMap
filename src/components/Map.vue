@@ -45,34 +45,6 @@ export default {
         AMap.event.addListener(map, "resize", this.resize)
     },
     methods: {
-        // getCityPosition() {             //暂时这么干
-        //     return new Promise(function(resolve, reject) {
-        //         var address_array = this.site.map(item => {
-        //             return item.city    //
-        //         })
-        //         address_array = new Set(address_array)
-        //         address_array = Array.from(address_array)
-        //         var address = ""
-        //         var count = 0
-        //         address_array.forEach(function(item, index) {
-        //             address += item + "|"
-        //             count += 1
-        //             if (count % 10 === 0 || (count % 10 != 10 && address_array[address_array.length - 1] == item)) {
-        //                 address = address.substring(0, address.length - 1)
-        //                 this.$http.get(`http://restapi.amap.com/v3/geocode/geo?key=52e4860002156231a725e6536572cd51&batch=true&address=${address}`).then(res => {
-        //                     let data = res.data.geocodes
-        //                     data.map(item => {
-        //                         item.count = 0
-
-        //                     })
-        //                     this.cities = this.cities.concat(data)
-        //                     resolve()
-        //                 })
-        //                 address = ""
-        //             }
-        //         }, this);
-        //     }.bind(this))
-        // },
         setCircle(map) {
             this.cities.forEach(item => {
                 const lng = Number(item.location.split(",")[0])
@@ -101,10 +73,10 @@ export default {
                         //图标主题
                         iconTheme: 'default',
                         //背景图标样式
-                        iconStyle: {
-                            backgroundColor: 'transparent',
-                            margin:"auto"
-                        },
+                        /*iconStyle: {
+                            // backgroundColor: 'transparent',
+                            //margin: "auto"
+                        },*/
                         //...其他Marker选项...，不包括content
                         map: map,
                         position: [lng, lat]
@@ -128,9 +100,8 @@ export default {
         markerClick(e) {
             this.infoWindow.setContent(e.target.content);
             this.infoWindow.open(this.map, e.target.getPosition());
-
         },
-        getMarkerList() {
+        getMarkerList() {           //得到当前地图显示范围内的marker，讲这些marker对应的site数组返回给父组件
             let southWest = this.map.getBounds().southwest
             let northeast = this.map.getBounds().northeast
 
@@ -730,12 +701,21 @@ export default {
 }
 </script>
 
-<style scoped>
+<style  >
 #storymap {
     position: relative;
     left: 0px;
     top: 0px;
     width: 60%;
     z-index: 0;
+}
+#storymap .amap-simple-marker-icon{
+    opacity: 0;
+}
+#storymap .amap-simple-marker-label{
+    top: initial;
+    line-height: 1;
+    bottom: -0.5em;
+    text-align: center;
 }
 </style>
