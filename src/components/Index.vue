@@ -1,9 +1,10 @@
 <template>
     <div class="index">
-        <GMap @getMarkerList="getMarkerList"></GMap>
+        <GMap @getMarkerList="getMarkerList"  @markerClick="markerClick" :showInfoItem="showInfoItem" ref="map"></GMap>
         <!-- <VMap @getMarkerList="getMarkerList"></VMap> -->
-        <Ground :markerList="markerList"></Ground>
+        <Ground ref="ground" :markerList="markerList" @getshowInfoItem="getshowInfoItem" @getshowInfoItemMouseOut="getshowInfoItemMouseOut"></Ground>
     </div>
+    
 </template>
 
 <script>
@@ -15,12 +16,24 @@ export default {
     name: 'Index',
     data() {
         return {
-            markerList: []
+            markerList: [],
+            showInfoItem:{}
         }
     },
     methods: {
         getMarkerList(markerList) {
             this.markerList = markerList
+        },
+        getshowInfoItem(showInfoItem){
+            this.showInfoItem = showInfoItem
+            // if(this.$refs.map.zoom>6)return
+            this.$refs.map.showInfo(showInfoItem)
+        },
+        getshowInfoItemMouseOut(){
+            this.$refs.map.map.clearInfoWindow( )
+        },
+        markerClick(item){
+            this.$refs.ground.handleGroundItemClick(item)
         }
     },
     components: {
@@ -35,7 +48,8 @@ export default {
 <style scoped>
     .index{
         display: flex;
-        width: 1960px;
-        /* height: */
+        width: 100%;
+        height:100%; 
+        position: fixed;
     }
 </style>

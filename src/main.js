@@ -2,6 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
+import store from './store'
 import router from './router'
 import axios from 'axios'
 // import VueAMap from 'vue-amap';
@@ -9,12 +10,16 @@ import axios from 'axios'
 import {
   Loading,
   Button,
-  Icon
+  Icon,
+  Row,
+  Col
 } from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 Vue.use(Loading)
 Vue.use(Button)
 Vue.use(Icon)
+Vue.use(Row)
+Vue.use(Col)
 
 // Vue.use(VueAMap);
 // VueAMap.initAMapApiLoader({
@@ -31,6 +36,7 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  store,
   template: '<App/>',
   components: {
     App

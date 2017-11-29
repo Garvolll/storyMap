@@ -1,18 +1,43 @@
 <template>
-    <div class="ground-list" v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(255, 255, 255, 0.8)">
-        <template v-if="!isDetail">
+    <div class="ground-list" ref="listDiv">
+        <!-- <template v-if="!isDetail"> -->
+        <ul class="ground-inner" ref="list">
+            <!-- <el-row> -->
+            <!-- <div class="ground-inner" ref="list"> -->
             <template v-for="item in markerList">
-                <img :src="'/static/img/banner/'+item.img" alt="" :key="item[2]" style="width:200px;height:200px;border:1px solid red;" @click="handleGroundItemClick(item)">
+                <!-- <el-col :xs="12" :sm="8" :md="8" :lg="8" :xl="8" :key="item.img"> -->
+                <li :key="item.img" :style="getStyle()" class="ground-item">
+                    <div class="background-image lazy-image loaded" :style="{backgroundImage: `url(static/img/banner/${item.img})`}" @mouseover="handleItemMouseOver(item)" @mouseout="handleItemMouseOut" @click="handleGroundItemClick(item)">
+                    </div>
+                    <div class="info-card">
+                        <h6>{{item.img}}</h6>
+                    </div>
+                </li>
+
+                <!-- </el-col> -->
             </template>
-        </template>
-        <template v-else>
-            <div>
-                <el-button type="primary" icon="el-icon-arrow-left"></el-button>
-                <el-button type="primary" icon="el-icon-arrow-right"></el-button>
+            <!-- </div> -->
+
+            <!-- </el-row> -->
+        </ul>
+
+        <!-- </template>  -->
+        <!-- <template v-else> -->
+        <div class="siteInfoPanel" ref="panel" style="display:none">
+            <p class="section">
+                <!-- <el-button type="primary" icon="el-icon-arrow-left"></el-button>
+                                                                        <el-button type="primary" icon="el-icon-arrow-right"></el-button> -->
                 <el-button type="primary" icon="el-icon-close" @click="handleClose"></el-button>
+            </p>
+            <h1 style="margin:20px 0;">{{siteInfo.city}}</h1>
+            <div class="desc" :style="getDescWidth()">
+                <!-- <div class="media-photo" :style="{backgroundImage: `url(static/img/banner/${siteInfo.img})`}">
+
+                    </div> -->
+                <img :src="`static/img/banner/${siteInfo.img}`" alt="" style="width:600px;">
             </div>
-            <h1>{{siteInfo.city}}</h1>
-        </template>
+        </div>
+        <!--</template>-->
     </div>
 </template>
 
@@ -23,31 +48,147 @@ export default {
     props: ['markerList'],
     data() {
         return {
-            loading: false,
-            isDetail: false,
-           
+            siteInfo: {}
         }
     },
+    mounted() {
+        // this.$refs.listDiv.style.maxHeight=window.screen.height+'px'
+    },
     methods: {
+        getStyle() {
+            const Wwidth = window.innerWidth
+            const width = Wwidth * 0.4 / 3
+            return {
+                width: (width - 10 / 3) + `px`,
+                height: width + 'px'
+            }
+        },
+        getDescWidth() {
+            const Wwidth = window.innerWidth
+            const width = Wwidth * 0.4 - 160
+            return {
+                width: width + `px`,
+                height: width + 'px'
+            }
+        },
         handleGroundItemClick(item) {
-            this.loading = true
+            this.$refs.list.style.display = "none"
             setTimeout(function() {
-                this.loading = false
                 this.siteInfo = item
-                this.isDetail = true
+                this.$refs.panel.style.display = "block"
             }.bind(this), 1)
         },
         handleClose() {
-            this.loading = true
+            this.$refs.panel.style.display = "none"
             setTimeout(function() {
-                this.loading = false
-                this.isDetail = false
+                this.$refs.list.style.display = "block"
             }.bind(this), 1)
+        },
+        handleItemMouseOver(item) {
+            this.$emit('getshowInfoItem', item)
+        },
+        handleItemMouseOut() {
+            this.$emit('getshowInfoItemMouseOut')
         }
     }
 }
 </script>
 
 <style scoped>
+.ground-list {
+    width: 40%;
+    min-height: 100%;
+    overflow: auto;
+    position: relative;
+}
 
+.ground-inner {
+    max-height: 100%;
+    overflow: auto;
+}
+
+.ground-item {
+    position: relative;
+    float: left;
+    height: 200px;
+    width: 200px;
+    padding: 0;
+    margin: 0;
+    background-color: #000;
+    list-style: none;
+    cursor: pointer;
+    -webkit-transition: opacity 0.3s;
+    -moz-transition: opacity 0.3s;
+    transition: opacity 0.3s;
+    color: #fff;
+}
+
+.ground-item .info-card {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.ground-item .info-card h6 {
+    display: block;
+    display: -webkit-box;
+    height: 38px;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.4em;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    margin: 8px;
+}
+
+.loaded {
+    animation: fadeIn 2s;
+}
+
+.background-image {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 0;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.siteInfoPanel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    padding: 0 80px;
+}
+
+.siteInfoPanel .section {
+    text-align: right;
+}
+
+.siteInfoPanel .section .el-button--primary {
+    color: black;
+    background-color: #Fff;
+    border-color: #ffF;
+    font-size: 26px;
+}
+
+.siteInfoPanel h1 {
+    text-align: center;
+}
+
+.siteInfoPanel .desc .media-photo {
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.siteInfoPanel .desc img {
+    object-fit: cover;
+}
 </style>
