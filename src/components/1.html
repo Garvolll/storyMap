@@ -6,7 +6,7 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
     <title>点聚合</title>
     <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main1119.css"/>
-    <script src="http://webapi.amap.com/maps?v=1.4.1&key=您申请的key值&plugin=AMap.MarkerClusterer"></script>
+    <script src="http://webapi.amap.com/maps?v=1.4.1&key=764d710f9fc5aae6d8b8f8007acd16ac&plugin=AMap.MarkerClusterer"></script>
     <script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
 </head>
 <body>
@@ -57,8 +57,10 @@
     addCluster(2);
 
     function addCluster(tag) {
+        console.log(cluster)
         if (cluster) {
             cluster.setMap(null);
+            console.log(cluster)
         }
         if (tag == 2) {//完全自定义
             cluster = new AMap.MarkerClusterer(map,markers,{
