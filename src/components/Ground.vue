@@ -1,11 +1,9 @@
 <template>
-    <div class="ground-list" ref="listDiv">
-        <!-- <template v-if="!isDetail"> -->
-        <ul class="ground-inner" ref="list">
-            <!-- <el-row> -->
-            <!-- <div class="ground-inner" ref="list"> -->
+    <div class="ground-list" ref="listDiv" >
+
+        <!-- 展示广场 !-->
+        <ul class="ground-inner" ref="list" :style="{display:eventListShow?'block':'none'}">
             <template v-for="item in markerList">
-                <!-- <el-col :xs="12" :sm="8" :md="8" :lg="8" :xl="8" :key="item.img"> -->
                 <li :key="item.img" :style="getStyle()" class="ground-item">
                     <div class="background-image lazy-image loaded" :style="{backgroundImage: `url(static/img/banner/${item.img})`}" @mouseover="handleItemMouseOver(item)" @mouseout="handleItemMouseOut" @click="handleGroundItemClick(item)">
                     </div>
@@ -14,34 +12,36 @@
                     </div>
                 </li>
 
-                <!-- </el-col> -->
             </template>
-            <!-- </div> -->
 
-            <!-- </el-row> -->
         </ul>
 
-        <!-- </template>  -->
-        <!-- <template v-else> -->
-        <div class="siteInfoPanel" ref="panel" style="display:none">
+        <!-- 地点时间详情 !-->
+        <div class="siteInfoPanel" ref="panel" :style="{display:panelShow?'block':'none'}">
             <p class="section">
-                <!-- <el-button type="primary" icon="el-icon-arrow-left"></el-button>
-                                                                        <el-button type="primary" icon="el-icon-arrow-right"></el-button> -->
                 <el-button type="primary" icon="el-icon-close" @click="handleClose"></el-button>
             </p>
             <h1 style="margin:20px 0;">{{siteInfo.city}}</h1>
             <div class="desc" :style="getDescWidth()">
                 <!-- <div class="media-photo" :style="{backgroundImage: `url(static/img/banner/${siteInfo.img})`}">
 
-                    </div> -->
+                                        </div> -->
                 <img :src="`static/img/banner/${siteInfo.img}`" alt="" style="width:600px;">
             </div>
         </div>
-        <!--</template>-->
+        
+        <!-- 创建事件表单 !-->
+        <div class="create-form" ref="form" :style="{display:createEventFormShow?'block':'none'}">
+            aaaa
+        </div>
     </div>
 </template>
 
 <script>
+import {
+    mapState,
+    mapActions
+} from 'vuex'
 
 export default {
     name: 'Ground-list',
@@ -52,9 +52,13 @@ export default {
         }
     },
     mounted() {
-        // this.$refs.listDiv.style.maxHeight=window.screen.height+'px'
     },
     methods: {
+        ...mapActions([
+            'eventListShowEvent',
+            "panelShowEvent",
+
+        ]),
         getStyle() {
             const Wwidth = window.innerWidth
             const width = Wwidth * 0.4 / 3
@@ -72,17 +76,13 @@ export default {
             }
         },
         handleGroundItemClick(item) {
-            this.$refs.list.style.display = "none"
-            setTimeout(function() {
-                this.siteInfo = item
-                this.$refs.panel.style.display = "block"
-            }.bind(this), 1)
+            this.panelShowEvent(true)
+            this.eventListShowEvent(false)
+            this.siteInfo = item
         },
         handleClose() {
-            this.$refs.panel.style.display = "none"
-            setTimeout(function() {
-                this.$refs.list.style.display = "block"
-            }.bind(this), 1)
+            this.panelShowEvent(false)
+            this.eventListShowEvent(true)
         },
         handleItemMouseOver(item) {
             this.$emit('getshowInfoItem', item)
@@ -90,6 +90,13 @@ export default {
         handleItemMouseOut() {
             this.$emit('getshowInfoItemMouseOut')
         }
+    },
+    computed: {
+        ...mapState({
+            createEventFormShow: state => state.site.createEventFormShow,
+            eventListShow: state => state.site.eventListShow,
+            panelShow: state => state.site.panelShow,
+        })
     }
 }
 </script>

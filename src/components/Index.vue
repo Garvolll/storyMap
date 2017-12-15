@@ -1,16 +1,15 @@
 <template>
     <div class="index">
         <GMap @getMarkerList="getMarkerList"  @markerClick="markerClick" :showInfoItem="showInfoItem" ref="map"></GMap>
-        <!-- <VMap @getMarkerList="getMarkerList"></VMap> -->
-        <Ground ref="ground" :markerList="markerList" @getshowInfoItem="getshowInfoItem" @getshowInfoItemMouseOut="getshowInfoItemMouseOut"></Ground>
+        <Ground ref="ground" :markerList="markerList" :createEventShow="createEventShow" @getshowInfoItem="getshowInfoItem" @getshowInfoItemMouseOut="getshowInfoItemMouseOut"></Ground>
     </div>
     
 </template>
 
 <script>
 import GMap from './Map'
-// import VMap from './VMap'
 import Ground from './Ground'
+import ABC from "./test"
 
 export default {
     name: 'Index',
@@ -20,13 +19,13 @@ export default {
             showInfoItem:{}
         }
     },
+    props:['createEventShow'],
     methods: {
         getMarkerList(markerList) {
             this.markerList = markerList
         },
         getshowInfoItem(showInfoItem){
             this.showInfoItem = showInfoItem
-            // if(this.$refs.map.zoom>6)return
             this.$refs.map.showInfo(showInfoItem)
         },
         getshowInfoItemMouseOut(){
@@ -39,7 +38,6 @@ export default {
     components: {
         GMap,
         Ground,
-        // VMap
     }
 }
 </script>
@@ -51,5 +49,6 @@ export default {
         width: 100%;
         height:100%; 
         position: fixed;
+        padding: 60px 0 0;
     }
 </style>

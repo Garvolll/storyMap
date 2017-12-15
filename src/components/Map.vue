@@ -1,5 +1,9 @@
 <template>
-    <div id="container" style="width:60%;height:100%;"></div>
+    <div id="container" style="width:60%;height:100%;">
+        <div class="kw-container">
+            <input type="text" id="keyword">
+        </div>
+    </div>
 </template>
 
 <script>
@@ -14,42 +18,63 @@ export default {
     props: ['showInfoItem'],
     mounted() {
         this.formattSiteArray = this.formattSite()
-
         this.infoWindow = new AMap.InfoWindow();
-        var map = new AMap.Map('container', {
-            // mapStyle: 'amap://styles/f55e6c52149700def688e88d2fa2ed67',//样式URL
-            mapStyle: 'amap://styles/dabfed942846f7dd21f29db8d6474128',//样式URL
-            resizeEnable: true,
-            zoom: 5,
-            center: [116.480983, 40.0958]
-        });
-        this.zoom = 5
-        AMap.plugin(['AMap.ToolBar', 'AMap.Scale', 'AMap.MarkerClusterer'],
-            function() {
-                map.addControl(new AMap.ToolBar());
 
-                map.addControl(new AMap.Scale());
-
-                map.addControl(new AMap.MarkerClusterer());
+        AMapUI.loadUI(['misc/PositionPicker'], function(PositionPicker) {
+            var map = new AMap.Map('container', {
+                // mapStyle: 'amap://styles/f55e6c52149700def688e88d2fa2ed67',//样式URL
+                // layers: [new AMap.TileLayer.Satellite()],
+                mapStyle: 'amap://styles/dabfed942846f7dd21f29db8d6474128',//样式URL
+                resizeEnable: true,
+                zoom: 5,
+                center: [116.480983, 40.0958]
             });
-        this.map = map
-        this.addMarker()
-        this.addCluster()
-        map.setFitView();
+            this.zoom = 5
+            AMap.plugin(['AMap.ToolBar', 'AMap.Scale', 'AMap.MarkerClusterer', 'AMap.Autocomplete', 'AMap.PlaceSearch'],
+                function() {
+                    map.addControl(new AMap.ToolBar());
+
+                    map.addControl(new AMap.Scale());
+
+                    map.addControl(new AMap.MarkerClusterer());
 
 
-        this.map = map
-        this.getMarkerList()
-        //缩放结束事件
-        AMap.event.addListener(map, "zoomend", this.zoomend)
-        //缩放比例变化事件
-        AMap.event.addListener(map, "zoomchange", this.zoomchange)
-        //地图平移时触发事件
-        AMap.event.addListener(map, "moveend", this.moveend)
-        //停止拖拽地图时触发
-        AMap.event.addListener(map, "dragend", this.dragend)
-        //停止拖拽地图时触发
-        AMap.event.addListener(map, "resize", this.resize)
+                    /*搜索建议配置项*/
+                    var autoOptions = {
+                        city: "", //城市，默认全国
+                        input: "keyword"//使用联想输入的input的id
+                    };
+                    var autocomplete = new AMap.Autocomplete(autoOptions);
+                    var placeSearch = new AMap.PlaceSearch({
+                        city: '',
+                        map: map
+                    });
+                    AMap.event.addListener(autocomplete, "select", function(e) {
+                        //TODO 针对选中的poi实现自己的功能
+                        placeSearch.search(e.poi.name)
+                        console.log(e)
+                    });
+                });
+            this.map = map
+            this.addMarker()
+            this.addCluster()
+            map.setFitView();
+
+
+            this.map = map
+            this.getMarkerList()
+            //缩放结束事件
+            AMap.event.addListener(map, "zoomend", this.zoomend)
+            //缩放比例变化事件
+            AMap.event.addListener(map, "zoomchange", this.zoomchange)
+            //地图平移时触发事件
+            AMap.event.addListener(map, "moveend", this.moveend)
+            //停止拖拽地图时触发
+            AMap.event.addListener(map, "dragend", this.dragend)
+            //停止拖拽地图时触发
+            AMap.event.addListener(map, "resize", this.resize)
+
+        }.bind(this))
     },
     methods: {
         ...mapActions([
@@ -100,7 +125,7 @@ export default {
             var parentDiv = document.createElement('div');
             // var Hue = 180 - factor * 90;
             var Hue = (0.20595238095238097.toFixed(4)) * 360
-            var GreyLevel = 100-((factor * 40 + 50).toFixed(2))
+            var GreyLevel = 100 - ((factor * 40 + 50).toFixed(2))
             var bgColor = `hsla(${Hue},100%,${GreyLevel}%,0.9)`;
             var fontColor = 'hsla(' + Hue + ',100%,20%,1)';
             var borderColor = 'hsla(' + Hue + ',100%,40%,1)';
@@ -113,8 +138,9 @@ export default {
             div.style.borderRadius = size / 2 + 'px';
             div.style.boxShadow = '0 0 1px ' + shadowColor;
             div.innerHTML = context.count;
-            div.style.lineHeight = size-7 + 'px';
+            div.style.lineHeight = size - 7 + 'px';
             div.style.color = fontColor;
+            div.style.color = "#fff";
             div.style.fontSize = '14px';
             div.style.textAlign = 'center';
             div.style.position = "absolute";
@@ -427,7 +453,8 @@ export default {
     /* left: 0px;
     top: 0px; */
     min-height: 100%;
-    width: 60%;
+    width: 100%;
+    position: relative;
 }
 
 #container .amap-simple-marker-icon {
@@ -439,5 +466,15 @@ export default {
     line-height: 1;
     bottom: -0.5em;
     text-align: center;
+}
+.kw-container {
+    position: absolute;
+    top: 10px;
+    left: 50px;
+    z-index:1000;
+}
+
+.kw-container input {
+    background: #fff;
 }
 </style>
