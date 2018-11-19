@@ -9,7 +9,6 @@
 <script>
 import GMap from './Map'
 import Ground from './Ground'
-import ABC from "./test"
 
 export default {
     name: 'Index',

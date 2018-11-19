@@ -1,6 +1,6 @@
 <template>
     <header>
-        <button @click="createEventClick">点击创建</button>
+        <button @click="createEventClick"></button>
     </header>
 </template>
 
@@ -42,7 +42,7 @@ header {
     width: 100%;
     height: 60px;
     position: fixed;
-    background: green;
+    background-color: #C8E49D;
     z-index: 1000;
 }
 </style>

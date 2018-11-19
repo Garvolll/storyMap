@@ -124,12 +124,13 @@ export default {
             var div = document.createElement('div');
             var parentDiv = document.createElement('div');
             // var Hue = 180 - factor * 90;
-            var Hue = (0.20595238095238097.toFixed(4)) * 360
-            var GreyLevel = 100 - ((factor * 40 + 50).toFixed(2))
-            var bgColor = `hsla(${Hue},100%,${GreyLevel}%,0.9)`;
-            var fontColor = 'hsla(' + Hue + ',100%,20%,1)';
-            var borderColor = 'hsla(' + Hue + ',100%,40%,1)';
-            var shadowColor = 'hsla(' + Hue + ',100%,50%,1)';
+            // var Hue = (0.20595238095238097.toFixed(4)) * 360
+            var Hue = 84
+            var GreyLevel = 100 - ((factor * 60 + 50).toFixed(2))
+            var bgColor = `hsla(${Hue},56.80%,${GreyLevel}%,0.9)`;
+            var fontColor = 'hsla(' + Hue + ',56.80%,20%,1)';
+            var borderColor = `hsla(${Hue},56.80%,${GreyLevel}%,0.9)`;
+            var shadowColor = 'hsla(' + Hue + ',56.80%,50%,1)';
 
             div.style.backgroundColor = bgColor         //内层圆样式
             var size = Math.round(30 + Math.pow(context.count / this.markersCount, 1 / 5) * 20);
@@ -150,7 +151,7 @@ export default {
             div.style.bottom = "0";
             div.style.margin = "auto";
 
-            var parentDivBgColor = `hsla(${Hue},100%,${GreyLevel}%,0.6)`;   //外层圆样式
+            var parentDivBgColor = `hsla(${Hue},56.80%,${GreyLevel}%,0.9)`;   //外层圆样式
             parentDiv.style.backgroundColor = parentDivBgColor
             parentDiv.style.width = parentDiv.style.height = (size * 1.4) + 'px';
             parentDiv.style.border = 'solid 1px ' + borderColor;
