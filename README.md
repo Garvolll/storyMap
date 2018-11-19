@@ -3,8 +3,9 @@
 > 参考[story-map](http://storymaps.arcgis.com/zh-cn/)基于位置讲故事的概念，简单map-tour形式的实现
 
 ## 框架和工具
-vue+vue-router+vuex+webpack
-vue-amap （vue-高德地图组件）
+vue+vue-router+vuex+webpack   
+
+ vue-amap （vue-高德地图组件）
 
 ## 关键点
 MarkerClusterer：marker点聚合
